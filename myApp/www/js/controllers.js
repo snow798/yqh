@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, cache, datas) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -19,6 +19,10 @@ angular.module('starter.controllers', [])
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
+     cache.set('3','2322333ffff','1313')
+     cache.set('33','2131')
+     datas.get();
+    console.log('cache4444',cache.get('3'),cache.all());
   };
 
   // Perform the login action when the user submits the login form
