@@ -2,7 +2,15 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, cache, datas) {
   // Form data for the login modal
+  $scope.datas= datas;
+  $scope.datas.get();
+  $scope.df= '435435';
+
+  $scope.dd= $scope.datas.dd;
   $scope.loginData = {};
+  $scope.$watch('df', function(newValue, oldValue) {
+    console.log(newValue, oldValue)
+  },true);
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
@@ -19,10 +27,8 @@ angular.module('starter.controllers', [])
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
-     cache.set('3','2322333ffff','1313')
-     cache.set('33','2131')
-     datas.get();
-    console.log('cache4444',cache.get('3'),cache.all());
+
+    console.log($scope.dd);
   };
 
   // Perform the login action when the user submits the login form
@@ -39,12 +45,12 @@ angular.module('starter.controllers', [])
 
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
+  { title: 'Reggae', id: 1 },
+  { title: 'Chill', id: 2 },
+  { title: 'Dubstep', id: 3 },
+  { title: 'Indie', id: 4 },
+  { title: 'Rap', id: 5 },
+  { title: 'Cowbell', id: 6 }
   ];
 })
 

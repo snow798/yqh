@@ -20,7 +20,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.service'])
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider) {
   $stateProvider
 
   .state('app', {
@@ -68,4 +68,5 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.service'])
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/playlists');
+  $httpProvider.defaults.cache = true;
 });
