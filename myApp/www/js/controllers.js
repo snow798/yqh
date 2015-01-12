@@ -1,15 +1,30 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, cache, datas) {
+.controller('AppCtrl', function($scope, $rootScope, $ionicModal, $timeout, cache, ajax) {
   // Form data for the login modal
-  $scope.datas= datas;
-  $scope.datas.get();
-  $scope.df= '435435';
+  $rootScope.ajax= function(){
+    var key= null;
+    if(arguments.length>0 && typeof arguments[0] == 'string'){
+      key= arguments[0];
+    }else if( typeof arguments[0] == 'object' && typeof arguments[0]['key'] == 'string'){
+      key= arguments[0]['key'];
+    }
+    
+  };
 
-  $scope.dd= $scope.datas.dd;
+
+  $scope.df= null;
+  $scope.$on("mbanner",
+             function (event, msg) {
+                    // $scope.$broadcast("loanLtemid_down", msg);
+                    $scope.df= msg;
+                    console.log('5544',event, msg)
+        });
+
+
   $scope.loginData = {};
   $scope.$watch('df', function(newValue, oldValue) {
-    console.log(newValue, oldValue)
+    console.log('66666666',newValue, oldValue)
   },true);
 
   // Create the login modal that we will use later
@@ -24,11 +39,14 @@ angular.module('starter.controllers', [])
     $scope.modal.hide();
   };
 
+  
+    $rootScope.tt= '554456464------------';
+
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
-
-    console.log($scope.dd);
+    ajax.get('mbanner');
+    console.log('453',$rootScope);
   };
 
   // Perform the login action when the user submits the login form
@@ -52,6 +70,7 @@ angular.module('starter.controllers', [])
   { title: 'Rap', id: 5 },
   { title: 'Cowbell', id: 6 }
   ];
+  console.log('4455',$scope.tt);
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {

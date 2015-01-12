@@ -43,71 +43,53 @@ angular.module('starter.service', [])
 }])
 
 .factory('nCache', function($cacheFactory) {
-	return $cacheFactory('nCache');
-})
+		return $cacheFactory('nCache');
+	})
 
-.service('datas', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
-	var _string= 'datas';
-	  /*var _cache = $cacheFactory('cache');
-	      _cache.put('a','This is the content of the template');
-	  var get= function(){nCache
-	  	console.log(_cache.get('a'));
-	  }*/
-	  var dd= undefined;
-	  var get= function(){
-	  	var cache = nCache.get('myData');
-	  	if (cache) {
-	  		dd= cache;
-	  	}
-	  	else {
-	  		$http({
-	  			method: 'post',
-	  			url: '/get/mbanner',
-	  			cache: true
-	  		})
-	  		.success(function(data) {
-	  			nCache.put('myData', data);
-	  			dd= data;
-	  		}
-	  		);
-	  	}
-	  	console.log($rootScope)
-	  }
-	  
-	  /*var getDatas= function(){
+.service('ajax', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
+	var _string= 'ajax';
+	var param={
+         "mbanner": { "path": "/get/mbanner", "method": "post", "pasttime": 100000, "callback": {}}
+	};
+	var get= function(){
+		var reqParam;
+		if(arguments.length= 1 && typeof arguments[0] == 'string'){
+		reqParam= param[arguments[0]] || null;
+		reqParam.key= arguments[0];
+		}
+        if(!reqParam){
+          $log.log(_string+ ' not found "'+ arguments[0]+ '" config！')
+          return null;
+        }
+        console.log(reqParam);
+		var data = nCache.get(reqParam.key);
+		if (data && data._time_+ reqParam.pasttime > new Date().getTime()) {
+			$rootScope.$broadcast(reqParam.key, data);
+			return data;
+		}
+		else {
+			$http({
+				method: reqParam.method,
+				url: reqParam.path
+			})
+			.success(function(data, status, header, config) {
+				if(typeof reqParam.callback == 'function'){
+				   reqParam.callback();
+				}
+				data._time_= new Date().getTime();
+				nCache.put(reqParam.key, data);
+				$rootScope.$broadcast(reqParam.key, data);
+			})
+			.error(function(data, status, headers, config){
+                $log.erro(_string+ ' erro! --'+ status+ config);
+            });
+		}
+		return null;
+	}
 
-	  	var p = $http({
-	  		method: 'post',
-	  		url: '/get/mbanner',
-	  		cache: _cache
-	  	});
-	  	p.success(function(data, status, headers, config){
-	  		console.log(data);
-	  	});
-		      //console.log('ssd',_cache.get('/get/mbanner'));
 
-		  }
-		  var data={
-		  	get: function ($scope, $http, myCache) {
-		  		var cache = myCache.get('myData');
-		  		if (cache) {
-		  			$scope.variable = cache;
-		  		}
-		  		      else {
-		  			$http.get('http://www.example.com/path/to/api/endpoint')
-		  			.success(function(data) {
-		  				$scope.variable = data;
-
-		  				myCache.put('myData', data);
-		  			}
-		  			);
-		  		}
-		  	}
-		  }*/
-
-		  return {
-		  	_string: _string,
-		  	get: get,
-		  	dd: dd
-		  };
-		}])
+	return {
+		_string: _string,
+		get: get
+	};
+	}])
