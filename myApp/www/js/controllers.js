@@ -9,7 +9,9 @@ angular.module('starter.controllers', [])
     }else if( typeof arguments[0] == 'object' && typeof arguments[0]['key'] == 'string'){
       key= arguments[0]['key'];
     }
-    
+    if(key){
+      ajax.get(key);
+    }
   };
 
 
