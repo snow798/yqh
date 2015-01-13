@@ -47,7 +47,7 @@ angular.module('starter.service', [])
 	})
 
 .service('ajax', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
-	var _string= 'ajax';
+	var _string= 'service>ajax';
 	var param={
          "mbanner": { "path": "/get/mbanner", "method": "post", "pasttime": 100000, "callback": {}}
 	};
