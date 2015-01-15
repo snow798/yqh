@@ -43,7 +43,7 @@ angular.module('starter.service', [])
 }])
 
 .factory('nCache', function($cacheFactory) {
-		return $cacheFactory('nCache');
+		return $cacheFactory('nCache',{storageMode: 'localStorage'});
 	})
 
 .service('ajax', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
@@ -93,3 +93,42 @@ angular.module('starter.service', [])
 		get: get
 	};
 	}])
+
+.service('user', function(nCache) {
+		var _string= 'service>user';
+		var _pasttime= 22333321;
+		var user={};
+		var put= function(){
+			user._data=arguments[0];
+			user._time= new Date().getTime();
+			nCache.put('_user_', user);
+		};
+		var status= function(){
+			var data= nCache.get('_user_');
+			if( typeof data == 'object' && data._time+ _pasttime< new Date().getTime() ){
+			   return true
+			}else{
+				return false
+			};
+		};
+		var get= function(){
+			if(status()){
+				return nCache.get('_user_')._data;
+			}else{
+				return false
+			}
+		};
+
+		var cancel= function(){
+			nCache.remove('_user_');
+		};
+
+		var refresh= function(){
+			
+		}
+
+		return {
+			//get: get
+		}
+
+	})

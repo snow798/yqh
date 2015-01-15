@@ -1,5 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
-  <ion-side-menu-content>
+  <ion-side-menu-content edge-drag-threshold="0" drag-content="true">
     <ion-nav-bar class="bar-light">
       <ion-nav-back-button>
       </ion-nav-back-button>
@@ -15,12 +15,15 @@
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left">
+  <ion-side-menu side="left" width="220" >
     <ion-header-bar class="bar-stable">
       <h1 class="title">Left</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
+        <ion-item nav-clear menu-close href="#/index">
+          Iindex
+        </ion-item>
         <ion-item nav-clear menu-close ng-click="login()">
           Login
         </ion-item>

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $log, $rootScope, $ionicModal, $timeout, cache, ajax) {
+.controller('AppCtrl', function($scope, $log, $rootScope, $ionicModal, $ionicLoading, $timeout, cache, ajax) {
     $scope._string= 'AppCtrl';
   //取消侦听
   $rootScope.$off = function (name, listener) {
@@ -33,44 +33,37 @@ angular.module('starter.controllers', [])
     if(key){
       var self= this;
       self.$on(key,function(event, msg){
+        $ionicLoading.hide();
         self[callback]= msg;
         if(!isMonitor){
         self.$off(key, arguments.callee);
         }
         console.log('msg',msg,self.$$listeners[key]);
       });
+       $ionicLoading.show({
+          template: 'Loading...'
+       });
       ajax.get(key);
     }
   };
 
 
-
-
   $scope.df= null;
-
-
-
   $scope.loginData = {};
-
   /*$scope.$watch('df', function(newValue, oldValue) {
     console.log('66666666-df: ',newValue, oldValue)
   },true);*/
-
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/login.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
   });
-
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
     $scope.modal.hide();
   };
-
-  
     $rootScope.tt= '554456464------------';
-
   // Open the login modal
   $scope.login = function() {
     $scope.modal.show();
@@ -108,4 +101,19 @@ angular.module('starter.controllers', [])
     $scope.dd= '4434534543';
     $scope.ajax('mbanner',  'dd');
 
+})
+
+.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout) {
+    $scope._string= 'PlaylistCtrl';
+    $scope.items = [1,2,3];
+  $scope.doRefresh = function() {
+    $http.get('/new-items')
+     .success(function(newItems) {
+       $scope.items = newItems;
+     })
+     .finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
+     });
+  };
 });
