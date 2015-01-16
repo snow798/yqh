@@ -123,12 +123,15 @@ angular.module('starter.service', [])
 			nCache.remove('_user_');
 		};
 
-		var refresh= function(){
+		var refresh= function(s){
 			
+			console.log(s, items)
+			//s._string= '555555555';
 		}
 
 		return {
 			//get: get
+			refresh: refresh
 		}
 
 	})

@@ -46,6 +46,10 @@ angular.module('starter.controllers', [])
       ajax.get(key);
     }
   };
+  //用户相关
+  $rootScope.user= function(){
+
+  }
 
 
   $scope.df= null;
@@ -103,9 +107,10 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout) {
+.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user) {
     $scope._string= 'PlaylistCtrl';
     $scope.items = [1,2,3];
+    user.refresh($scope);
   $scope.doRefresh = function() {
     $http.get('/new-items')
      .success(function(newItems) {
