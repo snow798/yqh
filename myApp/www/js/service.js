@@ -124,8 +124,7 @@ angular.module('starter.service', [])
 		};
 
 		var refresh= function(s){
-			
-			console.log(s, items)
+			//console.log(s)
 			//s._string= '555555555';
 		}
 

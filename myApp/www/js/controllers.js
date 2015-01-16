@@ -107,9 +107,10 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user) {
+.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user, $$jqLite) {
     $scope._string= 'PlaylistCtrl';
     $scope.items = [1,2,3];
+    console.log($scope, $$jqLite());
     user.refresh($scope);
   $scope.doRefresh = function() {
     $http.get('/new-items')
