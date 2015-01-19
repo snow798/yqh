@@ -48,6 +48,7 @@ angular.module('starter.service', [])
 
 .service('ajax', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
 	var _string= 'service>ajax';
+	var _rootPath= 'http://192.168.199.249:1991';
 	var param={
          "mbanner": { "path": "/get/mbanner", "method": "post", "pasttime": 100000, "callback": {}}
 	};
@@ -56,6 +57,7 @@ angular.module('starter.service', [])
 		if(arguments.length= 1 && typeof arguments[0] == 'string'){
 		reqParam= param[arguments[0]] || null;
 		reqParam.key= arguments[0];
+		reqParam.path= _rootPath ? (_rootPath+ reqParam.path): reqParam.path;
 		}
         if(!reqParam){
           $log.log(_string+ ' not found "'+ arguments[0]+ '" config！')
@@ -81,7 +83,8 @@ angular.module('starter.service', [])
 				$rootScope.$broadcast(reqParam.key, data);
 			})
 			.error(function(data, status, headers, config){
-                $log.erro(_string+ ' erro! --'+ status+ config);
+               // $log.erro(_string+ ' erro! --'+ status+ config);
+               console.log(data, status, headers, config);
             });
 		}
 		return null;
