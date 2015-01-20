@@ -95,7 +95,8 @@ angular.module('starter.controllers', [])
   { title: 'Dubstep', id: 3 },
   { title: 'Indie', id: 4 },
   { title: 'Rap', id: 5 },
-  { title: 'Cowbell', id: 6 }
+  { title: 'Cowbell', id: 6 },
+  { title: 'Cowbell2', id: 7 }
   ];
   console.log('4455',$scope.tt);
 })
@@ -107,9 +108,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user, $$jqLite) {
+.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user, $$jqLite, $cordovaCamera) {
     $scope._string= 'PlaylistCtrl';
-    $scope.items = [1,2,3];
+    /*$scope.items = [1,2,3];
     console.log($scope, $$jqLite());
     user.refresh($scope);
   $scope.doRefresh = function() {
@@ -121,5 +122,27 @@ angular.module('starter.controllers', [])
        // Stop the ion-refresher from spinning
        $scope.$broadcast('scroll.refreshComplete');
      });
-  };
+  };*/
+   document.addEventListener("deviceready", function () {
+
+    var options = {
+      quality: 50,
+      destinationType: Camera.DestinationType.DATA_URL,
+      sourceType: Camera.PictureSourceType.CAMERA,
+      allowEdit: true,
+      encodingType: Camera.EncodingType.JPEG,
+      targetWidth: 100,
+      targetHeight: 100,
+      popoverOptions: CameraPopoverOptions,
+      saveToPhotoAlbum: false
+    };
+
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      var image = document.getElementById('myImage');
+      image.src = "data:image/jpeg;base64," + imageData;
+    }, function(err) {
+      // error
+    });
+
+  }, false);
 });
