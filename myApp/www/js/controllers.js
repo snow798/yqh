@@ -1,7 +1,8 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $log, $rootScope, $ionicModal, $ionicLoading, $timeout, cache, ajax) {
+.controller('AppCtrl', function($scope, $log, $rootScope, $ionicModal, $ionicLoading, $timeout, cache, ajax, dataService) {
     $scope._string= 'AppCtrl';
+    $scope.dataService= dataService;
   //取消侦听
   $rootScope.$off = function (name, listener) {
             var namedListeners = this.$$listeners[name];
@@ -68,11 +69,29 @@ angular.module('starter.controllers', [])
     $scope.modal.hide();
   };
     $rootScope.tt= '554456464------------';
+
   // Open the login modal
   $scope.login = function() {
+    var t= dataService.req('mbanner') 
+    console.log(t);
+      t.then(function (data) {  
+        // Successful  
+        $scope.df = data;  
+      },   
+      function () {  
+        // failure  
+        $scope._string = "failure";  
+      },function(info){
+        console.log(info);
+      }); 
+    
+
     $scope.modal.show();
+     
+
+
     //ajax.get('mbanner');
-   $scope.ajax('mbanner', 'df');
+   //$scope.ajax('mbanner', 'df');
    // console.log('453',$rootScope);
   };
 
@@ -84,6 +103,7 @@ angular.module('starter.controllers', [])
     // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
+
     }, 1000);
   };
 })
@@ -108,7 +128,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user, $$jqLite, $cordovaCamera) {
+.controller('IndexCtrl', function($scope, $http, $stateParams, $ionicBackdrop, $timeout, user, $$jqLite, dataService) {
     $scope._string= 'PlaylistCtrl';
     /*$scope.items = [1,2,3];
     console.log($scope, $$jqLite());
@@ -123,26 +143,16 @@ angular.module('starter.controllers', [])
        $scope.$broadcast('scroll.refreshComplete');
      });
   };*/
-   document.addEventListener("deviceready", function () {
-
-    var options = {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.CAMERA,
-      allowEdit: true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 100,
-      targetHeight: 100,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false
-    };
-
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-      var image = document.getElementById('myImage');
-      image.src = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
-      // error
-    });
-
-  }, false);
+//$scope.items = [1,2,3];
+    var t= dataService.req('mbanner') 
+    console.log(t);
+      t.then(function (data) {  
+        // Successful  
+        $scope._string = data;  
+      },   
+      function () {  
+        // failure  
+        $scope._string = "failure";  
+      }); 
+   
 });

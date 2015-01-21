@@ -41,23 +41,28 @@ angular.module('starter.service', [])
 		all: all
 	};
 }])
-
+//缓存工厂
 .factory('nCache', function($cacheFactory) {
 		return $cacheFactory('nCache',{storageMode: 'localStorage'});
 	})
+//请求res
+.factory('ajaxParam', function() {
+		var param={
+         "mbanner": { "path": "/get/mbanner", "method": "post", "pasttime": 10000, "callback": {}}
+		};
+		param._rootPath= '';
+		return param;
+	})
 
-.service('ajax', ['$log', '$http', 'nCache', '$rootScope',  function($log, $http, nCache, $rootScope) {
+.service('ajax', ['$log', '$http', 'nCache', 'ajaxParam', '$rootScope',  function($log, $http, nCache, ajaxParam, $rootScope) {
 	var _string= 'service>ajax';
-	var _rootPath= 'http://192.168.10.112:1991';
-	var param={
-         "mbanner": { "path": "/get/mbanner", "method": "post", "pasttime": 100000, "callback": {}}
-	};
+	var param= ajaxParam;
 	var get= function(){
 		var reqParam;
 		if(arguments.length= 1 && typeof arguments[0] == 'string'){
 		reqParam= param[arguments[0]] || null;
 		reqParam.key= arguments[0];
-		reqParam.path= _rootPath ? (_rootPath+ reqParam.path): reqParam.path;
+		reqParam.path= param._rootPath ? (param._rootPath+ reqParam.path): reqParam.path;
 		}
         if(!reqParam){
           $log.log(_string+ ' not found "'+ arguments[0]+ '" config！')
@@ -137,3 +142,59 @@ angular.module('starter.service', [])
 		}
 
 	})
+
+.factory("dataService", function ($q, $log, nCache, $http, ajaxParam) { 
+	var _string= 'factory>dataService';
+    function _req() {  
+        var q = $q.defer();
+	    var param= ajaxParam;
+
+        var reqParam= null;
+		if(arguments.length= 1 && typeof arguments[0] == 'string'){
+		reqParam= param[arguments[0]] || null;
+		reqParam.key= arguments[0];
+		reqParam.path= param._rootPath ? (param._rootPath+ reqParam.path): reqParam.path;
+		}
+        if(!reqParam){
+          $log.log(_string+ ' not found "'+ arguments[0]+ '" config！')
+          q.notify([404, '请求参数出错！']); 
+          return false;
+        }
+        console.log(reqParam);
+		var data = nCache.get(reqParam.key);
+		if (data && data._time_+ reqParam.pasttime > new Date().getTime()) {     //缓存是否存在以及是否过期
+            q.notify([300, '获取缓存数据']); 
+			q.resolve(data);
+		}
+		else {
+            q.notify([201, '正在发送请求']); 
+			$http({
+				method: reqParam.method,
+				url: reqParam.path
+			})
+			.success(function(data, status, header, config) {
+                q.notify([200, '请求成功']); 
+				if(typeof reqParam.callback == 'function'){
+				   reqParam.callback();
+				}
+				data._time_= new Date().getTime();
+				nCache.put(reqParam.key, data);
+			    q.resolve(data);
+			})
+			.error(function(data, status, headers, config){
+               q.notify('请求失败！', 500); 
+               defer.reject(_string+ ' erro! --'+ status+ config)
+               console.log(data, status, headers, config);
+            });
+		}
+
+		/*setTimeout(function () {  
+            defer.reject('请求超时');  
+        }, 10000);*/
+
+        return q.promise;  
+    }  
+    return {  
+        req: _req  
+    };  
+})
